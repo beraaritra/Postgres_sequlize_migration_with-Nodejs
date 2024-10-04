@@ -1,62 +1,63 @@
 const sequelize = require("../db/database");
 const { Model, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 module.exports = sequelize.define('product', {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
-    type: Sequelize.INTEGER
+    type: DataTypes.INTEGER
   },
-  titile: {
-    type: Sequelize.STRING,
+  title: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
   isFeatured: {
-    type: Sequelize.BOOLEAN,
+    type: DataTypes.BOOLEAN,
     defaultValue: false,
     allowNull: false,
   },
-  projectImage: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+  productImage: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
     allowNull: false,
   },
   price: {
-    type: Sequelize.DECIMAL,
+    type: DataTypes.DECIMAL,
     allowNull: false,
   },
   shortDescription: {
-    type: Sequelize.TEXT,
+    type: DataTypes.TEXT,
     allowNull: false,
   },
   description: {
-    type: Sequelize.TEXT,
+    type: DataTypes.TEXT,
     allowNull: false,
   },
   productUrl: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+    type: DataTypes.ARRAY(DataTypes.STRING),
     // allowNull: false,
   },
   catagory: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+    type: DataTypes.ARRAY(DataTypes.STRING),
   },
   tags: {
-    type: Sequelize.ARRAY(Sequelize.STRING)
+    type: DataTypes.ARRAY(DataTypes.STRING)
   },
   createdBy: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     references: { model: 'user', key: 'id' },
   },
   createdAt: {
     allowNull: false,
-    type: Sequelize.DATE
+    type: DataTypes.DATE
   },
   updatedAt: {
     allowNull: false,
-    type: Sequelize.DATE
+    type: DataTypes.DATE
   },
   deletedAt: {
-    type: Sequelize.DATE,
+    type: DataTypes.DATE,
   }
 }, {
   paranoid: true,

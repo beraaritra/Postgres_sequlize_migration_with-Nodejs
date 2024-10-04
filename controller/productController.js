@@ -5,9 +5,9 @@ const createProduct = async (req, res) => {
 
     try {
         const newProduct = await productModel.create({
-            titlle: body.title,
+            title: body.title,
             isFeatured: body.isFeatured,
-            projectImage: body.projectImage,
+            productImage: body.productImage,
             price: body.price,
             shortDescription: body.shortDescription,
             description: body.description,
@@ -16,12 +16,13 @@ const createProduct = async (req, res) => {
             tags: body.tags,
             createdBy: 1,
         });
-        res.status(2001).json({ sucess: true, message: "New Product Created successfully" })
+        res.status(201).json({ sucess: true, message: "New Product Created successfully", data: newProduct })
         console.log("Product created successfully".bgYellow);
 
     } catch (error) {
-        res.status(500).json({ sucess: false, message: "Error to create a new product", data: newProduct });
+        res.status(500).json({ success: false, message: "Error to create a new product", error: error.message });
+        console.log("Error in creating product".bgRed + error.message);
     }
 }
 
-module.exports = createProduct;
+module.exports = { createProduct };
