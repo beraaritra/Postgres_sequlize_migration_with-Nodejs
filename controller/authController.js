@@ -131,7 +131,7 @@ const authentications = async (req, res, next) => {
 
 // For restricted routes 
 const restricTo = (...userTypes) => {
-    const checkPermission = async (req, res, next) => {
+    const checkPermission = (req, res, next) => {
         // If the userType is not allowed, respond with an error
         if (!userTypes.includes(req.user.userType)) {
             return res.status(403).json({ success: false, message: "You don't have permission to perform this action" });
@@ -140,7 +140,7 @@ const restricTo = (...userTypes) => {
         next();
     };
 
-    return checkPermission; // Return the async function
+    return checkPermission;
 };
 
 

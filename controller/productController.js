@@ -26,4 +26,11 @@ const createProduct = async (req, res) => {
     }
 }
 
-module.exports = { createProduct };
+const getAllProduct = async (req, res) => {
+
+    const result = await productModel.findAll();
+    console.log("All products fetched successfully".bgYellow);
+    res.status(200).json({ status: true, message: "All product fetched successfully", data: result })
+}
+
+module.exports = { createProduct, getAllProduct };
