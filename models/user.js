@@ -3,8 +3,9 @@ const { Model, Sequelize } = require('sequelize');
 
 const sequelize = require('../db/database');
 const bcrypt = require('bcrypt');
+const product = require('./product');
 
-module.exports = sequelize.define('user', {
+const user = sequelize.define('user', {
 
   id: {
     allowNull: false,
@@ -62,4 +63,10 @@ module.exports = sequelize.define('user', {
   freezTableName: true,
   tableName: 'user',
   modelName: 'user',
-})
+});
+
+user.hasMany(product, { foreignKey: 'createdBy' })
+product.belongsTo(user,{
+  foreignKey: 'createdBy',
+});
+module.exports = user;
