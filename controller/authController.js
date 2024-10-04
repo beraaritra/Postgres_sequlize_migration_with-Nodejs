@@ -95,7 +95,7 @@ const login = async (req, res, next) => {
 
 };
 
-
+// For Authentication Routes
 const authentications = async (req, res, next) => {
     // Get the token from headers
     let idToken = '';
@@ -129,5 +129,19 @@ const authentications = async (req, res, next) => {
 };
 
 
+// For restricted routes 
+const restricTo = (...userTypes) => {
+    const checkPermission = async (req, res, next) => {
+        // If the userType is not allowed, respond with an error
+        if (!userTypes.includes(req.user.userType)) {
+            return res.status(403).json({ success: false, message: "You don't have permission to perform this action" });
+        }
+        // Proceed to the next middleware
+        next();
+    };
 
-module.exports = { signup, login, authentications };
+    return checkPermission; // Return the async function
+};
+
+
+module.exports = { signup, login, authentications, restricTo };
