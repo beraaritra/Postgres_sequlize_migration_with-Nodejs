@@ -1,8 +1,6 @@
 'use strict';
-const {
-  Model,
-  Sequelize
-} = require('sequelize');
+const { Model, Sequelize } = require('sequelize');
+
 const sequelize = require('../db/database');
 const bcrypt = require('bcrypt');
 
