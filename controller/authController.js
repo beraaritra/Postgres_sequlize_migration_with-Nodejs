@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const userModel = require('../models/user');
 const generateTokenAndSetCookie = require('../utils/generateTokenAndSetCookie');
@@ -95,4 +96,38 @@ const login = async (req, res, next) => {
 };
 
 
-module.exports = { signup, login };
+const authentications = async (req, res, next) => {
+    // Get the token from headers
+    let idToken = '';
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        idToken = req.headers.authorization.split(' ')[1];
+    }
+
+    if (!idToken) {
+        return res.status(401).json({ success: false, message: "Authentication token missing" });
+    }
+
+    try {
+        // Verify the token
+        const decodedToken = await jwt.verify(idToken, process.env.JWT_SECRET);
+
+        // Find the user by the decoded token's id
+        const freshUser = await userModel.findByPk(decodedToken.id);
+        if (!freshUser) {
+            return res.status(401).json({ success: false, message: "User not found in the database" });
+        }
+
+        // Attach the user to the request object
+        req.user = freshUser;
+
+        // Move to the next middleware
+        return next();
+    } catch (error) {
+        console.log("Error in authenticate user please login :- ".bgRed + error.message);
+        return res.status(401).json({ success: false, message: "Invalid token: " + error.message });
+    }
+};
+
+
+
+module.exports = { signup, login, authentications };

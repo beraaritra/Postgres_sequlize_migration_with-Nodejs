@@ -2,6 +2,7 @@ const productModel = require('../models/product.js')
 
 const createProduct = async (req, res) => {
     const body = req.body;
+    const userId = req.user.id;
 
     try {
         const newProduct = await productModel.create({
@@ -14,7 +15,7 @@ const createProduct = async (req, res) => {
             productUrl: body.productUrl,
             catagory: body.catagory,
             tags: body.tags,
-            createdBy: 1,
+            createdBy: userId,
         });
         res.status(201).json({ sucess: true, message: "New Product Created successfully", data: newProduct })
         console.log("Product created successfully".bgYellow);
