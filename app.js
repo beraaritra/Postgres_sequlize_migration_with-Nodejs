@@ -6,7 +6,11 @@ const authRouter = require('./routes/auth.Routes');
 const app = express();
 
 dotenv.config();
+
 PORT = process.env.PORT || 5000;
+
+
+app.use(express.json());
 
 // Test routes
 app.get('/', (req, res) => {

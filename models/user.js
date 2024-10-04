@@ -4,7 +4,7 @@ const {
   Sequelize
 } = require('sequelize');
 const sequelize = require('../db/database');
-
+const bcrypt = require('bcrypt');
 
 module.exports = sequelize.define('user', {
 
@@ -29,6 +29,18 @@ module.exports = sequelize.define('user', {
   password: {
     type: Sequelize.STRING
   },
+  confirmPassword: {
+    type: Sequelize.VIRTUAL,
+    // Hashes the paassword and store the database
+    set(value) {
+      if (value === this.password) {
+        const hashPassword = bcrypt.hashSync(value, 10);
+        this.setDataValue('password', hashPassword);
+      } else {
+        throw new Error('Passwords do not match');
+      }
+    }
+  },
   createdAt: {
     allowNull: false,
     type: Sequelize.DATE
@@ -43,5 +55,6 @@ module.exports = sequelize.define('user', {
 }, {
   paranoid: true,
   freezTableName: true,
+  tableName: 'user',
   modelName: 'user',
 })
