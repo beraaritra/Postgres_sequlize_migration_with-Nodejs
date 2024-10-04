@@ -6,21 +6,34 @@ const { where } = require('sequelize');
 
 // For Signup
 const signup = async (req, res, nxt) => {
-    const body = req.body;
+    const { userType, fristName, lastName, email, password, confirmPassword } = req.body;
     try {
 
-        // FOr check user type
-        if (!['1', '2',].includes(body.userType)) {
+        // Check if password and confirmPassword matches
+        if (!userType || !fristName || !lastName || !email || !password || !confirmPassword) {
+            console.log("All fields must be required".bgRed);
+            return res.status(400).json({ success: false, message: "All fields must be required" });
+        }
+
+        // Check if email already exists
+        const userAlreadyExists = await userModel.findOne({ where: { email } });
+        if (userAlreadyExists) {
+            console.log("user mail already exists".bgRed);
+            return res.status(400).json({ success: false, message: "Email already exists" });
+        }
+
+        // For check user type
+        if (!['1', '2',].includes(userType)) {
             return res.status(400).json({ status: false, error: 'Invalid userType' });
         }
 
         const newUser = await userModel.create({
-            userType: body.userType,
-            fristName: body.fristName,
-            lastName: body.lastName,
-            email: body.email,
-            password: body.password,
-            confirmPassword: body.confirmPassword
+            userType,
+            fristName,
+            lastName,
+            email,
+            password,
+            confirmPassword
         });
 
         // for response result to deleted password field and deletedAt field
@@ -36,7 +49,7 @@ const signup = async (req, res, nxt) => {
 
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
-        console.log("Error in signup user: ".bgRed + error.message);
+        console.log("Error in signup user:-  ".bgRed + error.message);
     }
 
 };
@@ -49,6 +62,7 @@ const login = async (req, res, next) => {
 
         // here check the email and password fields
         if (!email || !password) {
+            console.log('please enter the email id and password'.bgRed);
             return res.status(400).json({ success: false, message: 'Please provide email and password' });
         }
 
@@ -56,7 +70,7 @@ const login = async (req, res, next) => {
         const user = await userModel.findOne({ where: { email } });
         if (!user) {
             console.log("User not found".bgRed);
-            
+
             return res.status(401).json({ success: false, message: "Email not found" });
         }
 

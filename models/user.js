@@ -15,19 +15,26 @@ module.exports = sequelize.define('user', {
     type: Sequelize.INTEGER
   },
   userType: {
-    type: Sequelize.ENUM('0', '1', '2')
+    type: Sequelize.ENUM('0', '1', '2'),
+    allowNull: false,
   },
   fristName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    allowNull: false,
   },
   lastName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    allowNull: false,
   },
   email: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
+
   },
   password: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    allowNull: false,
   },
   confirmPassword: {
     type: Sequelize.VIRTUAL,
