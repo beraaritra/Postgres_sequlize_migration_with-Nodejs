@@ -21,5 +21,5 @@ app.get('/', (req, res) => {
 app.use('/api/v1/auth', authRouter)
 
 app.listen(PORT, () => {
-    console.log(`Server started on ${PORT}`.bgBlue);
+    console.log(`Server started on  http://localhost:${PORT}`.bgBlue);
 })
