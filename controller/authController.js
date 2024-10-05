@@ -7,11 +7,11 @@ const { where } = require('sequelize');
 
 // For Signup
 const signup = async (req, res, nxt) => {
-    const { userType, fristName, lastName, email, password, confirmPassword } = req.body;
+    const { userType, firstName, lastName, email, password, confirmPassword } = req.body;
     try {
 
         // Check if password and confirmPassword matches
-        if (!userType || !fristName || !lastName || !email || !password || !confirmPassword) {
+        if (!userType || !firstName || !lastName || !email || !password || !confirmPassword) {
             console.log("All fields must be required".bgRed);
             return res.status(400).json({ success: false, message: "All fields must be required" });
         }
@@ -30,7 +30,7 @@ const signup = async (req, res, nxt) => {
 
         const newUser = await userModel.create({
             userType,
-            fristName,
+            firstName,
             lastName,
             email,
             password,

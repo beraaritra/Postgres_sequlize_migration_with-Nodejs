@@ -3,8 +3,8 @@ const { Model, Sequelize } = require('sequelize');
 const { DataTypes } = require('sequelize');
 
 module.exports = sequelize.define('product', {
-  id: {
-    allowNull: false,
+  id: { 
+    allowNull: false, 
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER
@@ -30,7 +30,7 @@ module.exports = sequelize.define('product', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
-  description: {
+  description: { 
     type: DataTypes.TEXT,
     allowNull: false,
   },
@@ -38,7 +38,7 @@ module.exports = sequelize.define('product', {
     type: DataTypes.ARRAY(DataTypes.STRING),
     // allowNull: false,
   },
-  catagory: {
+  category: {
     type: DataTypes.ARRAY(DataTypes.STRING),
   },
   tags: {

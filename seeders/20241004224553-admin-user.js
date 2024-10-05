@@ -6,7 +6,7 @@ module.exports = {
     return queryInterface.bulkInsert('user', [
       {
         userType: '1',
-        fristName: 'John',
+        firstName: 'John',
         lastName: 'Doe',
         email: process.env.ADMIN_EMAIL,
         password: hashPassword,

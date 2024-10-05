@@ -17,7 +17,7 @@ const user = sequelize.define('user', {
     type: Sequelize.ENUM('0', '1', '2'),
     allowNull: false,
   },
-  fristName: {
+  firstName: {
     type: Sequelize.STRING,
     allowNull: false,
   },
@@ -48,7 +48,7 @@ const user = sequelize.define('user', {
     }
   },
   createdAt: {
-    allowNull: false,
+    allowNull: false, 
     type: Sequelize.DATE
   },
   updatedAt: {

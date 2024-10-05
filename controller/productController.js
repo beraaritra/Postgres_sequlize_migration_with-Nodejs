@@ -15,7 +15,7 @@ const createProduct = async (req, res) => {
             shortDescription: body.shortDescription,
             description: body.description,
             productUrl: body.productUrl,
-            catagory: body.catagory,
+            category: body.category,
             tags: body.tags,
             createdBy: userId,
         });
@@ -82,7 +82,7 @@ const updateProduct = async (req, res, next) => {
         product.shortDescription = body.shortDescription;
         product.description = body.description;
         product.productUrl = body.productUrl;
-        product.catagory = body.catagory;
+        product.category = body.category;
         product.tags = body.tags;
 
         // Save the updated product

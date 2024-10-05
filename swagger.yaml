@@ -1,0 +1,422 @@
+openapi: 3.0.0
+info:
+  title: Comprehensive API Documentation
+  description: API documentation for Authentication and Product Management.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local server
+
+tags:
+  - name: Auth
+    description: Authentication routes
+  - name: Products
+    description: Product management routes
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # Authentication Schemas
+    AuthUser:
+      type: object
+      required:
+        - userType
+        - firstName
+        - lastName
+        - email
+        - password
+        - confirmPassword
+      properties:
+        userType:
+          type: string
+          enum: ['1', '2']
+          description: User type (1 for Admin, 2 for Standard User)
+        firstName:
+          type: string
+          description: First name of the user
+        lastName:
+          type: string
+          description: Last name of the user
+        email:
+          type: string
+          format: email
+          description: User email address
+        password:
+          type: string
+          format: password
+          description: User password
+        confirmPassword:
+          type: string
+          format: password
+          description: Password confirmation
+
+    AuthLogin:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+        password:
+          type: string
+          format: password
+          description: User password
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Login Successfully"
+        token:
+          type: string
+          description: JWT token
+
+    # Product Schemas
+    Product:
+      type: object
+      required:
+        - title
+        - productImage
+        - price
+        - shortDescription
+        - description
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the product
+        title:
+          type: string
+          description: Title of the product
+        isFeatured:
+          type: boolean
+          default: false
+          description: Indicates if the product is featured
+        productImage:
+          type: array
+          items:
+            type: string
+          description: URLs of the product images
+        price:
+          type: number
+          format: decimal
+          description: Price of the product
+        shortDescription:
+          type: string
+          description: Short description of the product
+        description:
+          type: string
+          description: Detailed description of the product
+        productUrl:
+          type: array
+          items:
+            type: string
+          description: URLs related to the product
+        category:
+          type: array
+          items:
+            type: string
+          description: Categories the product belongs to
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the product
+        createdBy:
+          type: integer
+          description: ID of the user who created the product
+
+    # Error Schema
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Error message explaining what went wrong"
+
+security:
+  - BearerAuth: []
+
+paths:
+  # Authentication Routes
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Sign up a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthUser'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      userType:
+                        type: string
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      email:
+                        type: string
+                      token:
+                        type: string
+        '400':
+          description: Bad request, validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Log in a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthLogin'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Unauthorized, invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Product Routes
+  /product/create:
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sucess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "New Product Created successfully"
+                  data:
+                    $ref: '#/components/schemas/Product'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /product/get-product:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /product/get-product/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get product by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Product ID
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /product/product-update/{id}:
+    patch:
+      tags:
+        - Products
+      summary: Update a product
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Product ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /product/product-delete/{id}:
+    delete:
+      tags:
+        - Products
+      summary: Delete a product
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Product ID
+      responses:
+        '200':
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Product deleted successfully"
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

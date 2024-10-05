@@ -39,7 +39,7 @@ module.exports = {
         type: DataTypes.ARRAY(DataTypes.STRING),
         // allowNull: false,
       },
-      catagory: {
+      category: {
         type: DataTypes.ARRAY(DataTypes.STRING),
       },
       tags: {

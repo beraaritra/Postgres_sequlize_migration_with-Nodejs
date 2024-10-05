@@ -13,3 +13,5 @@ commend for revert back or delete table :- npx sequelize-cli db:migrate:undo
 commend for generate project model&migrations file :-  npx sequelize-cli model:generate --name project --attributes titile:string
 
 commend for seeding file generate :-  npx sequelize-cli seed:generate --name admin-user
+
+commend for specific migration file revert back or delete table :- npx sequelize-cli db:migrate:undo --name <migration_file_name>
